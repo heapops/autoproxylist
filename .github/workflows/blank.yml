@@ -29,14 +29,21 @@ jobs:
       - name: Run a multi-line script
         run: |
           bash run.sh
-      - name: Release and upload assets
-        uses: softprops/action-gh-release@v0.1.6
+          
+      - name: Delete current release assets
+        uses: andreaswilli/delete-release-assets-action@v3.0.0
         with:
-          name: ${{ env.RELEASE_NAME }}
-          tag_name: ${{ env.TAG_NAME }}
-          draft: false
-          prerelease: false
-          files: |
-            ./proxy.txt
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: latest
+          deleteOnlyFromDrafts: false
+          
+      - name: Create and Upload Release
+        id: upload_release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: Release ${{ env.BUILDTIME }}
+          tag: latest
+          file_glob: true
+          overwrite: true
+          file: ./proxy.txt
