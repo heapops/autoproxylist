@@ -35,13 +35,6 @@ jobs:
         run: |
           bash run.sh
           
-      - name: Delete current release assets
-        uses: andreaswilli/delete-release-assets-action@v3.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: latest
-          deleteOnlyFromDrafts: false
-          
       - name: Release and upload assets
         uses: softprops/action-gh-release@v0.1.6
         with:
@@ -51,5 +44,13 @@ jobs:
           prerelease: false
           files: |
             ./proxy.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: clean old releases
+        uses: dev-drprasad/delete-older-releases@v0.2.0
+        with:
+          keep_latest: 10
+          delete_tags: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
