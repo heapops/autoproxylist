@@ -14,5 +14,5 @@ cat > .proxy.txt <<EOF
 ! Last Modified: $(date +"%a, %d %b %Y %T %z")
 EOF
 
-grep -E '(^domain:|^full:)' output/geolocation-!cn | sed -e 's/^domain://' -e 's/^full://' >> .proxy.txt
+grep -E '(^domain:|^full:)' output/geolocation-!cn | sed -e 's/^domain://' -e 's/^full://' -e 's/^/||/' >> .proxy.txt
 base64 .proxy.txt > proxy.txt
