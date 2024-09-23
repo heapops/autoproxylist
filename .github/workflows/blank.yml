@@ -4,10 +4,10 @@ name: CI
 
 # Controls when the workflow will run
 on:
+  schedule:
+    - cron: "10 22 */3 * *"
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -29,3 +29,14 @@ jobs:
       - name: Run a multi-line script
         run: |
           bash run.sh
+      - name: Release and upload assets
+        uses: softprops/action-gh-release@v0.1.6
+        with:
+          name: ${{ env.RELEASE_NAME }}
+          tag_name: ${{ env.TAG_NAME }}
+          draft: false
+          prerelease: false
+          files: |
+            ./proxy.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
